@@ -15,6 +15,14 @@ void HumanStrategy::Mark(Cell cell)
 void HumanStrategy::Fire(Cell cell)
 {}
 
-void HumanStrategy ::AddShip(Cell startPosition, Cell endPosition)
-{}
+bool HumanStrategy ::AddShip(Cell startPosition, Cell endPosition)
+{
+    if (!m_playerBoard.AddShip(startPosition, endPosition))
+    {
+        return false;
+    }
+
+    return true;
+   
+}
 

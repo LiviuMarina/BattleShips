@@ -13,7 +13,7 @@ public:
 
     virtual void Mark(Cell cell);
     virtual void Fire(Cell cell);
-    virtual void AddShip(Cell startPosition, Cell endPosition);
+    virtual bool AddShip(Cell startPosition, Cell endPosition);
 
 private:
 

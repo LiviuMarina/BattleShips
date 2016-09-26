@@ -13,12 +13,6 @@ Game::~Game()
 
 void Game::CreateGame()
 {
-    OpponentBoard opponentBoard;
-    opponentBoard.InitBoard();
-
-    PlayerBoard playerBoard;
-    playerBoard.InitBoard();
-
     //create players
     m_computerPlayer = std::make_shared<Player>(computerStrategy);
     m_computerPlayer->SelectStrategy();
@@ -30,4 +24,9 @@ void Game::CreateGame()
 
 void Game::ExitGame()
 {
+}
+
+const std::shared_ptr<Player> Game::GetHumanPlayer() const
+{
+    return m_humanPlayer;
 }

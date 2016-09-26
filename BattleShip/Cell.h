@@ -1,6 +1,8 @@
 #ifndef CELL_H
 #define CELL_H
 
+const int DEC_TO_ASCII = 65;
+
 class Cell
 {
 public:

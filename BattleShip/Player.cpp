@@ -5,10 +5,13 @@
 
 Player::Player(PlayerStrategy playerStrategy)
     :m_strategy(NULL),
-    m_playerBoard(NULL),
-    m_opponentBoard(NULL),
+    m_playerBoard(std::make_shared<PlayerBoard>()),
+    m_opponentBoard(std::make_shared<OpponentBoard>()),
     m_playerStrategy(playerStrategy)
 {
+    m_opponentBoard->InitBoard();
+
+    m_playerBoard->InitBoard();
 }
 
 Player::~Player()

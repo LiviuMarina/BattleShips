@@ -14,7 +14,7 @@ public:
     ~PlayerBoard();
 
 
-    void AddShip(CellProperties & startPosition, CellProperties & endPosition); //to do : Check if I can use Cell instead of CellProperties
+    bool AddShip(Cell & startPosition, Cell & endPosition); //to do : Check if I can use Cell instead of CellProperties
 
     std::vector<Ship> GetShips() const;
 private:

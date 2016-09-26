@@ -28,11 +28,17 @@ public:
     void SelectBoard();
 
 
+    std::shared_ptr<Strategy> GetPlayerStrategy() const
+    {
+        return m_strategy;
+    }
+
 private:
 
     std::shared_ptr<Strategy> m_strategy;
-    PlayerBoard * m_playerBoard;
-    OpponentBoard * m_opponentBoard;
+
+    std::shared_ptr<PlayerBoard> m_playerBoard;
+    std::shared_ptr<OpponentBoard> m_opponentBoard;
 
     PlayerStrategy m_playerStrategy;
 };

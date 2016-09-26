@@ -15,6 +15,8 @@ void ComputerStrategy::Mark(Cell cell)
 void ComputerStrategy::Fire(Cell cell)
 {}
 
-void ComputerStrategy::AddShip(Cell startPosition, Cell endPosition)
-{}
+bool ComputerStrategy::AddShip(Cell startPosition, Cell endPosition)
+{
+    return false;
+}
 
