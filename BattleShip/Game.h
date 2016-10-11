@@ -16,11 +16,11 @@ public:
     //Exit from the current game
     void ExitGame();
 
+    //Get human player
     const std::shared_ptr<Player> GetHumanPlayer() const;
 
+    //Get computer player
     const std::shared_ptr<Player> GetComputerPlayer() const;
-
-
 
 private:
 

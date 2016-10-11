@@ -8,12 +8,20 @@
 class ComputerStrategy :public Strategy
 {
 public:
+    //constructor
     ComputerStrategy(OpponentBoard & opponentBoard, PlayerBoard & playerBoard);
-    virtual ~ComputerStrategy();
 
+    //virtual destructor
+    ~ComputerStrategy();
+
+    //Mark the Cell that was hit
     virtual void Mark(Cell cell);
-    virtual void Fire(Cell cell);
-    virtual bool AddShip(Cell startPosition, Cell endPosition);
+
+    //Attack opponent
+    virtual Cell & Fire();
+
+    //Add ship
+    virtual bool AddShip();
 
 private:
 

@@ -10,7 +10,6 @@ Player::Player(PlayerStrategy playerStrategy)
     m_playerStrategy(playerStrategy)
 {
     m_opponentBoard->InitBoard();
-
     m_playerBoard->InitBoard();
 }
 
@@ -28,4 +27,4 @@ void Player::SelectStrategy()
     {
         m_strategy = std::make_shared<ComputerStrategy>(*m_opponentBoard, *m_playerBoard);
     }
-}
+} 

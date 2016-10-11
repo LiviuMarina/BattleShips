@@ -8,7 +8,6 @@ Game::Game()
 
 Game::~Game()
 {
-
 }
 
 void Game::CreateGame()
@@ -19,7 +18,6 @@ void Game::CreateGame()
 
     m_humanPlayer = std::make_shared<Player>(humanStrategy);
     m_humanPlayer->SelectStrategy();
-
 }
 
 void Game::ExitGame()
@@ -29,4 +27,9 @@ void Game::ExitGame()
 const std::shared_ptr<Player> Game::GetHumanPlayer() const
 {
     return m_humanPlayer;
+}
+
+const std::shared_ptr<Player> Game::GetComputerPlayer() const
+{
+    return m_computerPlayer;
 }

@@ -3,21 +3,20 @@
 
 #include "Cell.h"
 #include <array>
-
-enum Orientation
-{
-    orizontal,
-    vertical
-};
+#include "Helper.h"
 
 class Ship
 {
 public:
+    //default constructor
     Ship();
+
+    //destrctor
     ~Ship();
 
     //Generate a new ship, taking in consideration start and end positions
-    bool GenerateShip(Cell & startPosition, Cell & endPosition, std::array<std::array<CellProperties, 10>, 10> & boardCells);
+    bool GenerateShip(Cell & startPosition, Cell & endPosition, CellPropertiesArray & boardCells);
+
 };
 
 #endif //SHIP_H

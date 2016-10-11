@@ -6,20 +6,24 @@ const int DEC_TO_ASCII = 65;
 class Cell
 {
 public:
+
+    //default constructor
     Cell() {}
 
-    Cell(char row, int column);
+    //constructor
+    Cell(int row, int column);
 
-    ~Cell() {}
+    //destructor
+    ~Cell() {}    
 
     //Set the Cell row
-    void SetRow(char row)
+    void SetRow(int row)
     {
         m_row = row;
     }
     
     //Get the row were the cell is positioned
-    const char GetRow() const
+    const int GetRow() const
     {
         return m_row;
     }
@@ -37,15 +41,19 @@ public:
     }
 
 private:
-    char m_row;
+    int m_row;
     int m_column;
 };
 
-
+//Class CellProperties
 class CellProperties : public Cell
 {
 public:
+
+    //Default cosntructor
     CellProperties();
+
+    //Destructor
     ~CellProperties() {}
 
     //Add a flag that the Cell is into a ship
@@ -78,4 +86,8 @@ private:
     bool m_intoShip;
 
 };
+
+//Overloadingf operator== 
+bool operator==(const Cell & lhs, const Cell & rhs);
+
 #endif //CELL_H

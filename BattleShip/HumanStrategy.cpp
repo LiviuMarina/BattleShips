@@ -1,5 +1,8 @@
 #include "stdafx.h"
 #include "HumanStrategy.h"
+#include "Helper.h"
+#include <iostream> 
+#include <string>
 
 HumanStrategy::HumanStrategy(OpponentBoard & opponentBoard, PlayerBoard & playerBoard)
     :m_opponentBoard(opponentBoard),
@@ -12,17 +15,46 @@ HumanStrategy::~HumanStrategy()
 void HumanStrategy::Mark(Cell cell)
 {}
 
-void HumanStrategy::Fire(Cell cell)
-{}
-
-bool HumanStrategy ::AddShip(Cell startPosition, Cell endPosition)
+Cell & HumanStrategy::Fire()
 {
-    if (!m_playerBoard.AddShip(startPosition, endPosition))
+    return Cell();
+}
+
+bool HumanStrategy ::AddShip()
+{
+    int maxNoOfShips = 1;
+
+    while (maxNoOfShips < 8)
     {
-        return false;
+        Cell startPosition, endPosition;
+        std::cout << "Enter ship start point:" << std::endl;
+        std::string start = "";
+        std::cin >> start;
+
+        if (!StringToCell(start, startPosition))
+        {
+            continue;
+        }
+
+        std::cout << "Enter ship end point:" << std::endl;
+        std::string end = "";
+        std::cin >> end;
+
+        if (!StringToCell(end, endPosition))
+        {
+            continue;
+        }
+
+        if (!m_playerBoard.AddShip(startPosition, endPosition))
+        {
+            continue;
+        }
+
+        ++maxNoOfShips;
+
+        std::cout << "You have entered: " << maxNoOfShips << std::endl;
     }
 
-    return true;
-   
+    return true;   
 }
 

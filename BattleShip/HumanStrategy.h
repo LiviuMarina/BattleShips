@@ -8,12 +8,20 @@
 class HumanStrategy:public Strategy
 {
 public:
+    //constructor
     HumanStrategy(OpponentBoard & opponentBoard, PlayerBoard & playerBoard);
-    virtual ~HumanStrategy();
 
+    //virtual destructor
+    ~HumanStrategy();
+
+    //Mark the Cell that was hit
     virtual void Mark(Cell cell);
-    virtual void Fire(Cell cell);
-    virtual bool AddShip(Cell startPosition, Cell endPosition);
+
+    //Attack opponent
+    virtual Cell & Fire();
+
+    //Add ship
+    virtual bool AddShip();
 
 private:
 

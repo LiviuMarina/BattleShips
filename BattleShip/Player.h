@@ -23,12 +23,20 @@ public:
     //details: The strategy can be "human" or "computer"
     void SelectStrategy();
 
-    //Select the Board
-    //details: Can be selected the board for player or for opponent 
-    void SelectBoard();
+    //Get player board
+    std::shared_ptr<PlayerBoard> GetPlayerBoard()
+    {
+        return m_playerBoard;
+    }
 
+    //Get opponent board
+    std::shared_ptr<OpponentBoard> GetOpponentBoard()
+    {
+        return m_opponentBoard;
+    }
 
-    std::shared_ptr<Strategy> GetPlayerStrategy() const
+    //Get player strategy
+    std::shared_ptr<Strategy> GetStrategy() const
     {
         return m_strategy;
     }
