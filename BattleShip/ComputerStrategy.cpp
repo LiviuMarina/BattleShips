@@ -4,30 +4,40 @@
 #include <utility>
 #include <random>
 #include <chrono>
+#include <algorithm>
 
 namespace{
-
-    //Add random coordinates to generate ships
-    void AddRandomCoord(std::vector<int> rows, std::vector<int>columns, ShipType shipType, std::vector<std::pair<Cell, Cell>> & randomShips)
+    
+    /**
+    *  \brief Add random coordinates to generate ships.
+    *  \param[in] row A vector of cells row.
+    *  \param[in] columns A vector of cells column.
+    *  \param[in] shipType Ship type.
+    *  \param[out] randomShips Random generated ships coordinates.
+    */
+    void AddRandomCoord(const std::vector<int> & rows,
+        const std::vector<int> & columns, 
+        helper::ShipType shipType, 
+        std::vector<std::pair<cell::Cell, cell::Cell>> & randomShips)
     {
-        std::pair<Cell, Cell>  ship;
-        Orientation orientation = orizontal;
-        int noOfCells = static_cast<ShipType> (shipType);
+        std::pair<cell::Cell, cell::Cell>  ship;
+        helper::Orientation orientation = helper::horizontally;
+        int noOfCells = static_cast<helper::ShipType> (shipType);
 
         if (noOfCells % 2)
         {
-            orientation = vertical;
+            orientation = helper::vertical;
         }
 
         int iterations = 1;
-        if (shipType == ShipType::destroyer || shipType == ShipType::submarine)
+        if (shipType == helper::ShipType::destroyer || shipType == helper::ShipType::submarine)
         {
             iterations = 2;
         }
 
         for (int i = 1; i <= iterations; ++i)
         {
-            if (orientation == orizontal)
+            if (orientation == helper::horizontally)
             {
                 int prevStartRow = 0;
                 int prevEndRow = 0;
@@ -41,15 +51,7 @@ namespace{
 
                     if ((shipRow > prevStartRow) && (shipRow < prevEndRow))
                     {
-                        if (prevStartRow > 0)
-                        {
-                            shipRow = prevStartRow - 1;
-                        }
-
-                        else
-                        {
-                            shipRow = prevEndRow - 1;
-                        }
+                        (prevStartRow > 0) ? (shipRow = prevStartRow - 1) : (shipRow = prevEndRow - 1);                        
                     }
                 }
 
@@ -82,14 +84,7 @@ namespace{
 
                     if ((shipCol > prevStartCol) && (shipCol < prevEndCol))
                     {
-                        if (prevStartCol > 0)
-                        {
-                            shipCol = prevStartCol - 1;
-                        }
-                        else
-                        {
-                            shipCol = prevEndCol - 1;
-                        }
+                        (prevStartCol > 0) ? (shipCol = prevStartCol - 1) : (shipCol = prevEndCol - 1);                        
                     } 
                 }
 
@@ -101,7 +96,6 @@ namespace{
                 });
 
                 auto index = std::distance(rows.begin(), startRow);
-
                 
                 ship.first.SetRow(rows[index]);
                 ship.first.SetCol(shipCol);
@@ -114,59 +108,142 @@ namespace{
         }
     }
 
-    //Generate random coordinates for computer strategy
-    std::vector<std::pair<Cell, Cell>> GenerateRandomCoord()
+    /**
+    *  \brief Generates random coordinates for ships.
+    *  \return A vector filled with random coordinates for ships
+    */
+    std::vector<std::pair<cell::Cell, cell::Cell>> GenerateRandomCoord()
     {
-        std::vector<std::pair<Cell, Cell>>randomCoord;
+        std::vector<std::pair<cell::Cell, cell::Cell>>randomCoord;
 
-        std::vector<int> rows = {1, 2, 3, 4, 5, 6, 7, 8, 9, 10};
-        std::vector<int> columns = {1, 2, 3, 4, 5, 6, 7, 8, 9, 10};
+        std::vector<int> rows = {0, 1, 2, 3, 4, 5, 6, 7, 8, 9};
+        std::vector<int> columns = {0, 1, 2, 3, 4, 5, 6, 7, 8, 9};
         
         // obtain a time-based seed:
-        unsigned seed = std::chrono::system_clock::now().time_since_epoch().count();
+        unsigned seed = static_cast<unsigned>(std::chrono::system_clock::now().time_since_epoch().count());
         std::shuffle(rows.begin(), rows.end(), std::default_random_engine(seed));
         std::shuffle(columns.begin(), columns.end(), std::default_random_engine(seed+1));
 
-        for (int i = MAX_TYPE - 1; i >= 1; --i)
+        for (int i = helper::MAX_TYPE - 1; i >= 1; --i)
         {
-            ShipType type = static_cast<ShipType> (i);
+            helper::ShipType type = static_cast<helper::ShipType> (i);
             (AddRandomCoord(rows, columns, type, randomCoord));
         }      
 
         return randomCoord;
     }
-}
 
-ComputerStrategy::ComputerStrategy(OpponentBoard & opponentBoard, PlayerBoard & playerBoard)
-    :m_opponentBoard(opponentBoard),
-    m_playerBoard(playerBoard)
-{}
-
-ComputerStrategy::~ComputerStrategy()
-{}
-
-void ComputerStrategy::Mark(Cell cell)
-{}
-
-Cell & ComputerStrategy::Fire()
-{
-    return Cell();
-}
-
-bool ComputerStrategy::AddShip()
-{
-
-    std::vector<std::pair<Cell, Cell>>randomShips;
-    randomShips = GenerateRandomCoord();
-
-    for (auto ship : randomShips)
+    /**
+    *  \brief Select a cell to be attacked.
+    *  \param[in] lastCell Last attacked cell.
+    *  \param[in] attackedCell Cell to be hit.
+    */
+    void SearchForShipCell(const cell::CellProperties & lastCell, cell::Cell & attackCell)
     {
-        if (!m_playerBoard.AddShip(ship.first, ship.second))
+        if (lastCell.GetColumn() < helper::NO_OF_COLUMNS - 1)
         {
-            return false;
+            attackCell.SetCol(lastCell.GetColumn() + 1);
+        }
+        else
+        {
+            if (lastCell.GetColumn() > 0)
+            {
+                attackCell.SetCol(lastCell.GetColumn() - 1);
+            }
+
+        }
+
+        if (lastCell.GetRow() < helper::NO_OF_ROWS - 1)
+        {
+            attackCell.SetRow(lastCell.GetRow() + 1);
+        }
+        else
+        {
+            if (lastCell.GetRow() > 0)
+            {
+                attackCell.SetRow(lastCell.GetRow() - 2);
+            }
         }
     }
-    
-    return true;
+}
+
+namespace strategy
+{
+    ComputerStrategy::ComputerStrategy(hitboard::HitBoard & hitBoard, shipboard::ShipBoard & shipBoard)
+        :m_hitBoard(hitBoard),
+        m_shipBoard(shipBoard)
+    {}
+
+    ComputerStrategy::~ComputerStrategy()
+    {}
+
+    cell::Cell ComputerStrategy::Fire()
+    {
+        cell::Cell attackCell;
+
+        if (m_attackedCells.empty())
+        {
+            attackCell.SetCol(0);
+            attackCell.SetRow(0);
+        }
+        else
+        {
+            int size = m_attackedCells.size();
+            cell::CellProperties lastCell = m_attackedCells[size - 1];
+            for (auto i : m_shipBoard.GetInitializedBoard())
+            {
+                std::vector<cell::CellProperties>::iterator cellIter =
+                    std::find_if(
+                    i.begin(),
+                    i.end(),
+                    [&](cell::CellProperties cell)
+                {
+                    return (cell.GetColumn() == lastCell.GetColumn() && cell.GetRow() == lastCell.GetRow());
+
+                });
+
+                if (cellIter != i.end())
+                {
+                    if (cellIter->GetShipMembership())
+                    {
+                        if (lastCell.GetColumn() < helper::NO_OF_COLUMNS - 1)
+                        { 
+                            attackCell.SetCol(lastCell.GetColumn() + 1);
+                        }
+                        else
+                        {
+                            attackCell.SetCol(lastCell.GetColumn() - 1);
+                            attackCell.SetRow(lastCell.GetRow() + 1);
+                        }
+                        
+                        attackCell.SetRow(lastCell.GetRow());
+                    }
+
+                    else
+                    {
+                        SearchForShipCell(lastCell, attackCell);
+                    }
+                }
+            }
+        }
+
+       return attackCell;
+    }
+
+    bool ComputerStrategy::GenerateShip()
+    {
+        std::vector<std::pair<cell::Cell, cell::Cell>>randomShips;
+        randomShips = GenerateRandomCoord();
+
+        for (auto ship : randomShips)
+        {
+            if (!m_shipBoard.AddShip(ship.first, ship.second))
+            {
+                return false;
+            }
+        }
+
+        return true;
+    }
 }
 

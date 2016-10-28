@@ -1,0 +1,39 @@
+#ifndef GAME_H
+#define GAME_H
+
+#include "Player.h"
+#include <memory>
+
+class Game
+{
+public:
+    Game();
+    ~Game();
+
+    /**
+    *  \brief Create a new game.
+    */
+    void CreateGame();
+
+    //Exit from the current game
+    void ExitGame();
+
+    //Get human player
+    const Player& GetHumanPlayer() const
+    {
+        return m_humanPlayer;
+    }
+
+    //Get computer player
+    const Player& GetComputerPlayer() const
+    {
+        return m_computerPlayer;
+    }
+
+private:
+
+    Player m_humanPlayer;
+    Player m_computerPlayer;
+};
+
+#endif //GAME_H

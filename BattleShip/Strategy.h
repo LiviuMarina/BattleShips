@@ -3,26 +3,36 @@
 
 #include "Cell.h"
 
-class Strategy
+namespace strategy
 {
-public:
+    class Strategy
+    {
+    public:
+        /**
+        *  \brief Default constructor.
+        */
+        Strategy()
+        {}
 
-    //default constructor
-    Strategy()
-    {}
+        /**
+        *  \brief Virtual destructor.
+        */
+        virtual ~Strategy()
+        {}
 
-    //default constructor
-    virtual ~Strategy()
-    {}
-    
-    //Mark the Cell that was hit
-    virtual void Mark(Cell cell) = 0;
+        /**
+        *  \brief Attack opponent.
+        *  \return Cell to be marked as hit
+        */
+        virtual cell::Cell Fire() = 0;
 
-    //Attack opponent
-    virtual Cell & Fire() = 0;
+        /**
+        *  \brief Generate ship.
+        *  \return True is the ship was generated, false otherwise.
+        */
+        virtual bool GenerateShip() = 0;
+    };
 
-    //Add ship
-    virtual bool AddShip() = 0;
-};
+}
 
 #endif //STRATEGY_H

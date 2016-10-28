@@ -1,22 +1,40 @@
 #ifndef SHIP_H
 #define SHIP_H
 
-#include "Cell.h"
-#include <array>
+#include "CellProperties.h"
 #include "Helper.h"
+#include <vector>
 
-class Ship
+namespace ship
 {
-public:
-    //default constructor
-    Ship();
+    class Ship
+    {
+    public:
+        /**
+        *  \brief Class constructor.
+        *  \param[in] begin Ship starting point.
+        *  \param[in] end Ship end point.
+        */
+        Ship(const cell::Cell & begin, const cell::Cell & end, helper::Orientation shipOrientation);
 
-    //destrctor
-    ~Ship();
+        /**
+        *  \brief Class destructor.
+        */
+        ~Ship();
 
-    //Generate a new ship, taking in consideration start and end positions
-    bool GenerateShip(Cell & startPosition, Cell & endPosition, CellPropertiesArray & boardCells);
+        /**
+        *  \brief Check if the ship was sunk..
+        *  \return True if the ship was sunk, false otherwise.
+        */
+        bool Sunk(const std::vector<std::vector<cell::CellProperties>> & boardCells) const;
 
-};
+    private:
+        
+        cell::Cell m_begin;
+        cell::Cell m_end;
+
+        helper::Orientation m_shipOrientation;
+    };
+}
 
 #endif //SHIP_H

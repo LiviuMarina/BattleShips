@@ -3,91 +3,72 @@
 
 const int DEC_TO_ASCII = 65;
 
-class Cell
+namespace cell
 {
-public:
-
-    //default constructor
-    Cell() {}
-
-    //constructor
-    Cell(int row, int column);
-
-    //destructor
-    ~Cell() {}    
-
-    //Set the Cell row
-    void SetRow(int row)
+    class Cell
     {
-        m_row = row;
-    }
-    
-    //Get the row were the cell is positioned
-    const int GetRow() const
-    {
-        return m_row;
-    }
+    public:
 
-    //Set the Cell's column
-    void SetCol(int column)
-    {
-        m_column = column;
-    }
-    
-    //Get the column were the cell is positioned
-    const int GetColumn() const
-    {
-        return m_column;
-    }
+        /**
+        *  \brief Default constructor
+        */
+        Cell();
 
-private:
-    int m_row;
-    int m_column;
-};
+        /**
+        *  \brief Constructor
+        */
+        Cell(int row, int column);
 
-//Class CellProperties
-class CellProperties : public Cell
-{
-public:
+        /**
+        *  \brief Destructor
+        */
+        virtual ~Cell();
 
-    //Default cosntructor
-    CellProperties();
+        /**
+        *  \brief Set cell row value.
+        *  \param[in] row Cell row.
+        */
+        void SetRow(int row)
+        {
+            m_row = row;
+        }
 
-    //Destructor
-    ~CellProperties() {}
+        /**
+        *  \brief Get cell row.
+        *  \return Cell row value.
+        */
+        const int GetRow() const
+        {
+            return m_row;
+        }
 
-    //Add a flag that the Cell is into a ship
-    void SetShipMembership(bool intoShip)
-    {
-        m_intoShip = intoShip;
-    }
+        /**
+        *  \brief Set cell column value.
+        *  \param[in] row Cell row.
+        */
+        void SetCol(int column)
+        {
+            m_column = column;
+        }
 
-    //Check if the Cell is already into the ship
-    const bool GetShipMembership() const
-    {
-        return m_intoShip;
-    }
+        /**
+        *  \brief Get cell column.
+        *  \return Cell row value.
+        */
+        const int GetColumn() const
+        {
+            return m_column;
+        }
 
-    //Set a flag that specify that the Cell is hit by opponent
-    void SetHitState(bool isHit)
-    {
-        m_isHit = isHit;
-    }
+    private:
+        int m_row;
+        int m_column;
+    };
 
-    //Check if the Cell was already hit
-    const bool GetHitState() const
-    {
-        return m_isHit;
-    }
-
-private:
-
-    bool m_isHit;
-    bool m_intoShip;
-
-};
-
-//Overloadingf operator== 
-bool operator==(const Cell & lhs, const Cell & rhs);
+    /**
+    *  \brief Overloading operator==
+    */
+    bool operator==(const Cell & lhs, const Cell & rhs);
+}
 
 #endif //CELL_H

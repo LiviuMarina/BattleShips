@@ -2,31 +2,43 @@
 #define HUMANSTRATEGY_H
 
 #include "Strategy.h"
-#include "OpponentBoard.h"
-#include "PlayerBoard.h"
+#include "HitBoard.h"
+#include "ShipBoard.h"
 
-class HumanStrategy:public Strategy
+namespace strategy
 {
-public:
-    //constructor
-    HumanStrategy(OpponentBoard & opponentBoard, PlayerBoard & playerBoard);
+    class HumanStrategy :public Strategy
+    {
+    public:
+        /**
+        *  \brief Class constructor.
+        *  \param[in] hitBoard Board where to keep marks for the hits.
+        *  \param[in] shipBoard Board were are stored the ships.
+        */
+        HumanStrategy(hitboard::HitBoard & hitBoard, shipboard::ShipBoard & shipBoard);
 
-    //virtual destructor
-    ~HumanStrategy();
+        /**
+        *  \brief Virtual destructor.
+        */
+        ~HumanStrategy();
 
-    //Mark the Cell that was hit
-    virtual void Mark(Cell cell);
+        /**
+        *  \brief Attack opponent.
+        *  \return Cell to be marked as hit
+        */
+        virtual cell::Cell Fire();
 
-    //Attack opponent
-    virtual Cell & Fire();
+        /**
+        *  \brief Generate ship.
+        *  \return True is the ship was generated, false otherwise.
+        */
+        virtual bool GenerateShip();
 
-    //Add ship
-    virtual bool AddShip();
+    private:
 
-private:
-
-    OpponentBoard & m_opponentBoard;
-    PlayerBoard & m_playerBoard;
-};
+        hitboard::HitBoard & m_hitBoard;
+        shipboard::ShipBoard & m_shipBoard;
+    };
+}
 
 #endif //HUMANSTRATEGY_H

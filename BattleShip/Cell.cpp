@@ -1,17 +1,25 @@
 #include "stdafx.h"
 #include "Cell.h"
+#include "Helper.h"
 
-Cell::Cell(int row, int column)
-    :m_row(row),
-    m_column(column)
-{}
-
-CellProperties::CellProperties()
-    : m_isHit(false),
-    m_intoShip(false)
-{}
-
-bool operator==(const Cell & lhs, const Cell & rhs)
+namespace cell
 {
-    return (lhs.GetColumn() == rhs.GetColumn()) && (lhs.GetRow() == rhs.GetRow());
+    Cell::Cell()
+        :m_row(helper::MAX_INT),
+        m_column(helper::MAX_INT)
+    {}
+
+    Cell::Cell(int row, int column)
+        : m_row(row),
+        m_column(column)
+    {}
+
+    Cell::~Cell()
+    {}
+
+    bool operator==(const Cell & lhs, const Cell & rhs)
+    {
+        return (lhs.GetColumn() == rhs.GetColumn()) && (lhs.GetRow() == rhs.GetRow());
+    }
+
 }

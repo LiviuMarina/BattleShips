@@ -1,0 +1,5 @@
+GIT_EDITOR="'c:/Program Files/Git/usr/bin/vim.exe'" git commit -a
+
+git rebase
+
+git push origin master

@@ -1,0 +1,163 @@
+#include "stdafx.h"
+#include "ShipBoard.h"
+
+namespace{
+
+    // Get the ship orientation
+    Orientation CheckShipOrientation(Cell & startPosition, Cell & endPosition)
+    {
+        Orientation orientation;
+
+        if (startPosition.GetRow() != endPosition.GetRow())
+        {
+            orientation = Orientation::vertical;
+        }
+
+        else
+        {
+            orientation = Orientation::orizontal;
+        }
+
+        return orientation;
+    }
+
+    // Check if the ship will not be generated in an occupied cell
+    bool CheckFreeSpaceForShip(int row, int column, const std::vector<std::vector<CellProperties>> & boardCells)
+    {
+        bool result = false;
+
+        if (!boardCells[row][column].GetShipMembership())
+        {
+            result = true;
+        }
+
+        return result;
+    }
+
+    //Check if the ship of specific type was already added
+    //details: Is not used in this moment
+    bool ShipTypeOccurence(ShipType shipType)
+    {
+        std::vector <ShipType> addedShipTypes;
+        int occurence = 0;
+        for (auto item : addedShipTypes)
+        {
+            if (shipType == item)
+            {
+                ++occurence;
+            }
+
+            if (shipType == destroyer || shipType == submarine)
+            {
+                if (occurence >= 2)
+                {
+                    return false;
+                }
+            }
+            else
+            {
+                if (occurence >= 1)
+                {
+                    return false;
+                }
+            }
+        }
+        return true;
+    }
+}
+
+ShipBoard::ShipBoard()
+    :m_Ships()
+{}
+
+ShipBoard::~ShipBoard()
+{}
+
+bool ShipBoard::AddShip(Cell & startPosition, Cell & endPosition)
+{
+    Ship ship(startPosition, endPosition);
+    m_Ships.push_back(ship);
+
+    Orientation orientation = CheckShipOrientation(startPosition, endPosition);
+
+    if (orientation == orizontal)
+    {
+        int rowNumber = (int)startPosition.GetRow();
+        std::vector<CellProperties *> shipCells;
+
+        //int shipNumberOfCells = startPosition.GetColumn() - endPosition.GetColumn();
+        //ShipTypeOccurence(static_cast<ShipType>(shipNumberOfCells));
+
+        for (int i = startPosition.GetColumn() - 1; i < (endPosition.GetColumn()); ++i)
+        {
+            if (CheckFreeSpaceForShip(rowNumber, i, m_boardCells))
+            {
+                shipCells.push_back(&m_boardCells.data()[rowNumber][i]);
+            }
+            else
+            {
+                std::cout << "One or more cells belongs to another ship. Please enter other positions" << std::endl;
+                shipCells.clear();
+                break;
+            }
+        }
+        if (!shipCells.empty())
+        {
+            for (int vectIncr = 0; vectIncr < (int)shipCells.size(); ++vectIncr)
+            {
+                shipCells[vectIncr]->SetShipMembership(true);
+            }
+        }
+        else
+        {
+            return false;
+        }
+    }
+
+    else if (orientation == vertical)
+    {
+        std::vector<CellProperties *> shipCells;
+
+        for (int i = startPosition.GetRow(); i < (endPosition.GetRow() + 1); ++i)
+        {
+            if (CheckFreeSpaceForShip(i, startPosition.GetColumn(), m_boardCells))
+            {
+                shipCells.push_back(&m_boardCells.data()[i][(startPosition.GetColumn() - 1)]);
+            }
+            else
+            {
+                std::cout << "One or more cells belongs to another ship. Please enter other positions" << std::endl;
+                shipCells.clear();
+                break;
+            }
+        }
+        if (!shipCells.empty())
+        {
+            std::vector<CellProperties *>::const_iterator vectInter = shipCells.begin();
+            for (; vectInter != shipCells.end(); ++vectInter)
+            {
+                (*vectInter)->SetShipMembership(true);
+            }
+        }
+        else
+        {
+            return false;
+        }
+    }
+    
+    return true;
+   // m_Ships.push_back(ship);
+}
+
+const std::vector<Ship> & ShipBoard::GetShips() const
+{
+    return m_Ships;
+}
+
+bool ShipBoard::Defeated() const
+{
+    for (auto ship : m_Ships)
+    {
+        i.Sunk();
+    }
+}

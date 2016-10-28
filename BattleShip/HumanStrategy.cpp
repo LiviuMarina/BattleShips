@@ -4,57 +4,67 @@
 #include <iostream> 
 #include <string>
 
-HumanStrategy::HumanStrategy(OpponentBoard & opponentBoard, PlayerBoard & playerBoard)
-    :m_opponentBoard(opponentBoard),
-    m_playerBoard(playerBoard)
-{}
-
-HumanStrategy::~HumanStrategy()
-{}
-
-void HumanStrategy::Mark(Cell cell)
-{}
-
-Cell & HumanStrategy::Fire()
+namespace strategy
 {
-    return Cell();
-}
+    HumanStrategy::HumanStrategy(hitboard::HitBoard & hitBoard, shipboard::ShipBoard & shipBoard)
+        :m_hitBoard(hitBoard),
+        m_shipBoard(shipBoard)
+    {}
 
-bool HumanStrategy ::AddShip()
-{
-    int maxNoOfShips = 1;
+    HumanStrategy::~HumanStrategy()
+    {}
 
-    while (maxNoOfShips < 8)
+    cell::Cell HumanStrategy::Fire()
     {
-        Cell startPosition, endPosition;
-        std::cout << "Enter ship start point:" << std::endl;
-        std::string start = "";
-        std::cin >> start;
+        std::cout << "Please select location to attack:" << std::endl;
+        std::string attackLocation = "";
+        std::cin >> attackLocation;
 
-        if (!StringToCell(start, startPosition))
+        cell::Cell attackCell;
+        if (!helper::StringToCell(attackLocation, attackCell))
         {
-            continue;
+            return cell::Cell();
         }
 
-        std::cout << "Enter ship end point:" << std::endl;
-        std::string end = "";
-        std::cin >> end;
-
-        if (!StringToCell(end, endPosition))
-        {
-            continue;
-        }
-
-        if (!m_playerBoard.AddShip(startPosition, endPosition))
-        {
-            continue;
-        }
-
-        ++maxNoOfShips;
-
-        std::cout << "You have entered: " << maxNoOfShips << std::endl;
+        return attackCell;
     }
 
-    return true;   
+    bool HumanStrategy::GenerateShip()
+    {
+        int maxNoOfShips = 0;
+
+        while (maxNoOfShips < 7)
+        {
+            cell::Cell startPosition, endPosition;
+            std::cout << "Enter ship start point.Row between A and J, column between 0 and 9." << std::endl;
+            std::string start = "";
+            std::cin >> start;
+
+            if (!helper::StringToCell(start, startPosition))
+            {
+                continue;
+            }
+
+            std::cout << "Enter ship end point.Row between A and J, column between 0 and 9." << std::endl;
+            std::string end = "";
+            std::cin >> end;
+
+            if (!helper::StringToCell(end, endPosition))
+            {
+                continue;
+            }
+
+            if (!m_shipBoard.AddShip(startPosition, endPosition))
+            {
+                continue;
+            }
+
+            ++maxNoOfShips;
+
+            std::cout << "You have entered: " << maxNoOfShips << "ships."<< std::endl;
+        }
+
+        return true;
+    }
 }
 

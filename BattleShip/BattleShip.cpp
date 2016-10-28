@@ -20,33 +20,56 @@ int _tmain(int argc, _TCHAR* argv[])
         return 0;
     }
 
-    Game game;       
+    game::Game game;       
 
     game.CreateGame();
 
     std::cout << "Game is started. Please add ships for battle" << std::endl;
-    if (!game.GetHumanPlayer()->GetStrategy()->AddShip())
+
+    std::shared_ptr<strategy::Strategy> humanPlayerStrategy = game.GetHumanPlayer().GetStrategy();
+
+    if (humanPlayerStrategy != NULL)
     {
-        std::cout << "One or more ships failed to be added" << std::endl;
-        return 0;
+        if (!humanPlayerStrategy->GenerateShip())
+        {
+            std::cout << "One or more ships failed to be added" << std::endl;
+            return 0;
+        }
     }
+    else
+    {
+        return 0;
+    }   
 
     std::cout << "Ships were added. Wait for the computer to add the ships" << std::endl;
 
-    if (!game.GetComputerPlayer()->GetStrategy()->AddShip())
+    std::shared_ptr<strategy::Strategy> computerPlayerStrategy = game.GetComputerPlayer().GetStrategy();
+
+    if (computerPlayerStrategy != NULL)
     {
-        std::cout << "Random ships failed to be added" << std::endl;
+        if (!computerPlayerStrategy->GenerateShip())
+        {
+            std::cout << "Random ships failed to be added" << std::endl;
+            return 0;
+        }
+    }
+    else
+    {
         return 0;
     }
        
     std::cout << "Random ships were added." << std::endl;
 
-    while (!game.GetHumanPlayer()->GetPlayerBoard()->Defeated() && !game.GetComputerPlayer()->GetPlayerBoard()->Defeated())
-    {
-        game.GetHumanPlayer()->GetStrategy()->Mark(game.GetHumanPlayer()->GetStrategy()->Fire());
-        game.GetHumanPlayer()->GetStrategy()->Mark(game.GetHumanPlayer()->GetStrategy()->Fire());
+    bool notDefeatead = true;
 
-    }
+    while (notDefeatead)
+    {
+        if (!game.Play(notDefeatead))
+        {
+            std::cout << "Game was stopped." << std::endl;
+            break;
+        }
+    }   
     
 	return 0;
 }

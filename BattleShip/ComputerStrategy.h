@@ -2,31 +2,44 @@
 #define COMPUTERSTRATEGY_H
 
 #include "Strategy.h"
-#include "OpponentBoard.h"
-#include "PlayerBoard.h"
+#include "HitBoard.h"
+#include "ShipBoard.h"
 
-class ComputerStrategy :public Strategy
+namespace strategy
 {
-public:
-    //constructor
-    ComputerStrategy(OpponentBoard & opponentBoard, PlayerBoard & playerBoard);
+    class ComputerStrategy :public Strategy
+    {
+    public:
 
-    //virtual destructor
-    ~ComputerStrategy();
+        /**
+        *  \brief Default constructor.
+        */
+        ComputerStrategy(hitboard::HitBoard & opponentBoard, shipboard::ShipBoard & playerBoard);
 
-    //Mark the Cell that was hit
-    virtual void Mark(Cell cell);
+        /**
+        *  \brief Virtual destructor.
+        */
+        ~ComputerStrategy();
 
-    //Attack opponent
-    virtual Cell & Fire();
+        /**
+        *  \brief Attack opponent.
+        *  \return Cell to be marked as hit.
+        */
+        virtual cell::Cell Fire(); //!!!!!return as reference????
 
-    //Add ship
-    virtual bool AddShip();
+        /**
+        *  \brief Generate ship.
+        *  \return True is the ship was generated, false otherwise.
+        */
+        virtual bool GenerateShip();
 
-private:
+    private:
 
-    OpponentBoard & m_opponentBoard;
-    PlayerBoard & m_playerBoard;
-};
+        hitboard::HitBoard & m_hitBoard;
+        shipboard::ShipBoard & m_shipBoard;
+
+        std::vector<cell::CellProperties> m_attackedCells;
+    };
+}
 
 #endif //COMPUTERSTRATEGY_H

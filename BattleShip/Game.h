@@ -4,28 +4,63 @@
 #include "Player.h"
 #include <memory>
 
-class Game
+namespace game
 {
-public:
-    Game();
-    ~Game();
+    class Game
+    {
+    public:
 
-    //Create a new game
-    void CreateGame();
+        /**
+        *  \brief Default constructor.
+        */
+        Game();
 
-    //Exit from the current game
-    void ExitGame();
+        /**
+        *  \brief Destructor.
+        */
+        ~Game();
 
-    //Get human player
-    const std::shared_ptr<Player> GetHumanPlayer() const;
+        /**
+        *  \brief Create a new game.
+        */
+        void CreateGame();
 
-    //Get computer player
-    const std::shared_ptr<Player> GetComputerPlayer() const;
+        /**
+        *  \brief Play a new game.
+        *  \param[out] notDefeatead Flag that represents the game status .
+        *  \return True if the game can play without errors, false otherwise.
+        */
+        bool Play(bool & notDefeatead);
 
-private:
+        /**
+        *  \brief Exit the game.
+        */
+        void ExitGame();
 
-    std::shared_ptr<Player> m_humanPlayer;
-    std::shared_ptr<Player> m_computerPlayer;
-};
+        /**
+        *  \brief Get the human player.
+        *  \return A reference to the human player.
+        */
+        player::Player& GetHumanPlayer()
+        {
+            return m_humanPlayer;
+        }
+
+        /**
+        *  \brief Get the computer player.
+        *  \return A reference to the computer player.
+        */
+        player::Player& GetComputerPlayer()
+        {
+            return m_computerPlayer;
+        }
+
+    private:
+
+        player::Player m_humanPlayer;
+        player::Player m_computerPlayer;
+    };
+
+}
 
 #endif //GAME_H

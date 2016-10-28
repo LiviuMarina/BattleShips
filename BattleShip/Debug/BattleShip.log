@@ -1,18 +1,29 @@
-﻿Build started 10.10.2016 23:38:21.
+﻿Build started 28.10.2016 08:15:53.
      1>Project "C:\Users\lima9736\Desktop\BattleShip\BattleShips\BattleShip\BattleShip.vcxproj" on node 2 (Build target(s)).
      1>ClCompile:
-         C:\Program Files (x86)\VC\bin\CL.exe /c /ZI /nologo /W3 /WX- /sdl /Od /Oy- /D WIN32 /D _DEBUG /D _CONSOLE /D _LIB /D _UNICODE /D UNICODE /Gm /EHsc /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Yu"stdafx.h" /Fp"Debug\BattleShip.pch" /Fo"Debug\\" /Fd"Debug\vc120.pdb" /Gd /TP /analyze- /errorReport:prompt Player.cpp
+         C:\Program Files (x86)\VC\bin\CL.exe /c /ZI /nologo /W3 /WX- /sdl /Od /Oy- /D WIN32 /D _DEBUG /D _CONSOLE /D _LIB /D _UNICODE /D UNICODE /Gm /EHsc /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Yu"stdafx.h" /Fp"Debug\BattleShip.pch" /Fo"Debug\\" /Fd"Debug\vc120.pdb" /Gd /TP /analyze- /errorReport:prompt BattleShip.cpp Board.cpp ComputerStrategy.cpp Game.cpp HitBoard.cpp HumanStrategy.cpp Player.cpp ShipBoard.cpp
+         ComputerStrategy.cpp
+         Board.cpp
+         Generating Code...
+         Skipping... (no relevant changes detected)
+         ShipBoard.cpp
          Player.cpp
+         HumanStrategy.cpp
+         HitBoard.cpp
+         Game.cpp
+         BattleShip.cpp
        Link:
          C:\Program Files (x86)\VC\bin\link.exe /ERRORREPORT:PROMPT /OUT:"C:\Users\lima9736\Desktop\BattleShip\BattleShips\Debug\BattleShip.exe" /INCREMENTAL /NOLOGO kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /MANIFEST /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /manifest:embed /DEBUG /PDB:"C:\Users\lima9736\Desktop\BattleShip\BattleShips\Debug\BattleShip.pdb" /SUBSYSTEM:CONSOLE /TLBID:1 /DYNAMICBASE /NXCOMPAT /IMPLIB:"C:\Users\lima9736\Desktop\BattleShip\BattleShips\Debug\BattleShip.lib" /MACHINE:X86 Debug\BattleShip.obj
+         Debug\Board.obj
          Debug\Cell.obj
+         Debug\CellProperties.obj
          Debug\ComputerStrategy.obj
          Debug\Game.obj
          Debug\Helper.obj
          Debug\HumanStrategy.obj
-         Debug\OpponentBoard.obj
+         Debug\HitBoard.obj
          Debug\Player.obj
-         Debug\PlayerBoard.obj
+         Debug\ShipBoard.obj
          Debug\Ship.obj
          Debug\stdafx.obj
          BattleShip.vcxproj -> C:\Users\lima9736\Desktop\BattleShip\BattleShips\Debug\BattleShip.exe
@@ -20,4 +31,4 @@
 
 Build succeeded.
 
-Time Elapsed 00:00:02.84
+Time Elapsed 00:00:01.15
