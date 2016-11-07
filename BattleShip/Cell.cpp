@@ -22,4 +22,12 @@ namespace cell
         return (lhs.GetColumn() == rhs.GetColumn()) && (lhs.GetRow() == rhs.GetRow());
     }
 
+    bool operator<(const Cell & lhs, const Cell & rhs)
+    {
+        //return (lhs.GetColumn() < rhs.GetColumn()) && (lhs.GetRow() < rhs.GetRow());
+        if (lhs.GetColumn() < rhs.GetColumn()) return true;
+        else if ((lhs.GetColumn() == rhs.GetColumn()) && (lhs.GetRow() < rhs.GetRow())) return true;
+        else return false;
+    }
+
 }

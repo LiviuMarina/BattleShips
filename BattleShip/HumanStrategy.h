@@ -34,6 +34,7 @@ namespace strategy
         */
         virtual bool GenerateShip();
 
+       
     private:
 
         hitboard::HitBoard & m_hitBoard;

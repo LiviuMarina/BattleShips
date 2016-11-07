@@ -3,6 +3,8 @@
 #include "Helper.h"
 #include <iostream> 
 #include <string>
+#include <fstream>
+#include <exception>
 
 namespace strategy
 {
@@ -16,9 +18,11 @@ namespace strategy
 
     cell::Cell HumanStrategy::Fire()
     {
-        std::cout << "Please select location to attack:" << std::endl;
+        std::cout << "Please select location to attack (A-J and 0-9):" << std::endl;
         std::string attackLocation = "";
         std::cin >> attackLocation;
+
+        std::cout << "Attacked cell: " << attackLocation << std::endl;
 
         cell::Cell attackCell;
         if (!helper::StringToCell(attackLocation, attackCell))
@@ -31,8 +35,55 @@ namespace strategy
 
     bool HumanStrategy::GenerateShip()
     {
-        int maxNoOfShips = 0;
+        std::ifstream shipsFile;
+        shipsFile.exceptions(std::ifstream::failbit | std::ifstream::badbit);
+        try
+        {
+            shipsFile.open("ShipsFile.txt");
+            std::string txtLine;
 
+            while (!shipsFile.eof()) 
+            {
+                cell::Cell startPosition, endPosition;
+
+                getline(shipsFile, txtLine);
+                std::string pointsDelimiter = ",";
+
+                int pos = txtLine.find(pointsDelimiter);
+                std::string startPoint = txtLine.substr(0, pos);
+                int nextPointStart = pos + 1;
+                int strLenght = txtLine.length();
+                int numberOfChars = strLenght - nextPointStart;
+                std::string endPoint = txtLine.substr(nextPointStart, numberOfChars);
+
+                if (!helper::StringToCell(startPoint, startPosition))
+                {
+                    return false;
+                }
+
+                if (!helper::StringToCell(endPoint, endPosition))
+                {
+                    return false;
+                }
+
+                if (!m_shipBoard.AddShip(startPosition, endPosition))
+                {
+                    return false;
+                }
+
+            }
+            shipsFile.close();
+
+            return true;
+        }
+
+        catch (std::ifstream::failure & e)
+        {
+            std::cout << e.what() << std::endl;
+            std::cout << "Ships config file cannot be found. Enter the ships manually" << std::endl;
+        }        
+
+        int maxNoOfShips = 0;
         while (maxNoOfShips < 7)
         {
             cell::Cell startPosition, endPosition;
@@ -60,7 +111,6 @@ namespace strategy
             }
 
             ++maxNoOfShips;
-
             std::cout << "You have entered: " << maxNoOfShips << "ships."<< std::endl;
         }
 

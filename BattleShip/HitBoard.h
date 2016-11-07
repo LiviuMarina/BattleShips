@@ -29,6 +29,11 @@ namespace hitboard
         *  \param[in] hitCell Cell to be marked.
         */
         void Mark(const cell::Cell & hitCell, bool intoShip);
+
+        /*HitBoard & operator=(const HitBoard& boardRef)
+        {
+        return *this;
+        }*/
     };
 }
 

@@ -5,8 +5,78 @@
 #include <random>
 #include <chrono>
 #include <algorithm>
+#include "Helper.h"
 
 namespace{
+
+    /**
+    *  \brief Generate time-based random vectors of integers.
+    *  \param[in/out] rows Vector of rows indexes.
+    *  \param[in/out] columns Vector of columns indexes.
+    */
+    void GenerateRandomVectors(std::vector<int> & rows, std::vector<int> & columns)
+    {
+        // obtain a time-based seed:
+        unsigned seed = static_cast<unsigned>(std::chrono::system_clock::now().time_since_epoch().count());
+        std::shuffle(rows.begin(), rows.end(), std::default_random_engine(seed));
+        std::shuffle(columns.begin(), columns.end(), std::default_random_engine(seed + 1));
+    }
+
+    /**
+    *  \brief Search a free column index to add a ship.
+    *  \param[in] randomShips Vector of random ships.
+    *  \param[in/out] shipCol Column index.
+    */
+    void searchFreeColumnNumber(const std::vector<std::pair<cell::Cell, cell::Cell>> & randomShips, int & shipCol)
+    {
+        for (int i = 0; i < randomShips.size(); ++i)
+        {
+            //search if the column index is already part of a ship
+            if ((randomShips[i].first.GetColumn() <= shipCol) && (randomShips[i].second.GetColumn() >= shipCol))
+            {
+                if (shipCol < helper::NO_OF_COLUMNS - 1)
+                {
+                    shipCol++;
+                }
+                else
+                {
+                    shipCol = 0;
+                }
+
+                //call the method with a new value for shipCol
+                searchFreeColumnNumber(randomShips, shipCol);
+                break;
+            }
+        }
+    }
+
+    /**
+    *  \brief Search a free row index to add a ship.
+    *  \param[in] randomShips Vector of random ships.
+    *  \param[in/out] shipRow Row index.
+    */
+    void searchFreeRowNumber(const std::vector<std::pair<cell::Cell, cell::Cell>> & randomShips, int & shipRow)
+    {
+        for (int i = 0; i < randomShips.size(); ++i)
+        {
+            //search if the row index is already part of a ship
+            if ((randomShips[i].first.GetRow() <= shipRow) && (randomShips[i].second.GetRow() >= shipRow))
+            {
+                if (shipRow < helper::NO_OF_ROWS - 1)
+                {
+                    shipRow++;
+                }
+                else 
+                {
+                    shipRow = 0;
+                }
+
+                //call the method with a new value for shipRow
+                searchFreeRowNumber(randomShips, shipRow);
+                break;
+            }
+        }
+    }
     
     /**
     *  \brief Add random coordinates to generate ships.
@@ -39,28 +109,18 @@ namespace{
         {
             if (orientation == helper::horizontally)
             {
-                int prevStartRow = 0;
-                int prevEndRow = 0;
-
+                int prevStartRow = 0,prevEndRow = 0;
                 int shipRow = rows[noOfCells * i];
 
                 if (!randomShips.empty())
                 {
-                    prevStartRow = randomShips[randomShips.size() - 1].first.GetRow();
-                    prevEndRow = randomShips[randomShips.size() - 1].second.GetRow();
-
-                    if ((shipRow > prevStartRow) && (shipRow < prevEndRow))
-                    {
-                        (prevStartRow > 0) ? (shipRow = prevStartRow - 1) : (shipRow = prevEndRow - 1);                        
-                    }
+                    searchFreeRowNumber(randomShips, shipRow);
                 }
 
-                auto startColumn = find_if(columns.begin(),
-                    columns.end(),
-                    [=](const int column)
-                {
-                    return column == noOfCells;
-                });
+                auto startColumn = find_if(columns.begin(),columns.end(),[=](const int column)
+                                                                         {
+                                                                            return column == noOfCells;
+                                                                         });
 
                 auto index = std::distance(columns.begin(), startColumn);
                                 
@@ -73,27 +133,18 @@ namespace{
 
             else
             {
-                int prevStartCol = 0;
-                int prevEndCol = 0;
+                int prevStartCol = 0, prevEndCol = 0;
                 int shipCol = columns[noOfCells * i];
 
                 if (!randomShips.empty())
                 {
-                    prevStartCol = randomShips[randomShips.size() - 1].first.GetColumn();
-                    prevEndCol = randomShips[randomShips.size() - 1].second.GetColumn();
-
-                    if ((shipCol > prevStartCol) && (shipCol < prevEndCol))
-                    {
-                        (prevStartCol > 0) ? (shipCol = prevStartCol - 1) : (shipCol = prevEndCol - 1);                        
-                    } 
+                    searchFreeColumnNumber(randomShips, shipCol);
                 }
 
-                auto startRow = find_if(rows.begin(),
-                    rows.end(),
-                    [=](const int row)
-                {
-                    return row == noOfCells;
-                });
+                auto startRow = find_if(rows.begin(),rows.end(), [=](const int row)
+                                                                 {
+                                                                    return row == noOfCells;
+                                                                 });
 
                 auto index = std::distance(rows.begin(), startRow);
                 
@@ -119,10 +170,7 @@ namespace{
         std::vector<int> rows = {0, 1, 2, 3, 4, 5, 6, 7, 8, 9};
         std::vector<int> columns = {0, 1, 2, 3, 4, 5, 6, 7, 8, 9};
         
-        // obtain a time-based seed:
-        unsigned seed = static_cast<unsigned>(std::chrono::system_clock::now().time_since_epoch().count());
-        std::shuffle(rows.begin(), rows.end(), std::default_random_engine(seed));
-        std::shuffle(columns.begin(), columns.end(), std::default_random_engine(seed+1));
+        GenerateRandomVectors(rows, columns);
 
         for (int i = helper::MAX_TYPE - 1; i >= 1; --i)
         {
@@ -135,35 +183,90 @@ namespace{
 
     /**
     *  \brief Select a cell to be attacked.
-    *  \param[in] lastCell Last attacked cell.
-    *  \param[in] attackedCell Cell to be hit.
+    *  \param[in/out] attackedCells reference to a set of attacked cell.
+    *  \param[in/out] attackCell Cell to be hit.
     */
-    void SearchForShipCell(const cell::CellProperties & lastCell, cell::Cell & attackCell)
+    void SearchForShipCell( std::set<cell::Cell> & attackedCells, cell::Cell & attackCell)
     {
-        if (lastCell.GetColumn() < helper::NO_OF_COLUMNS - 1)
+        std::vector<int> rows = { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9 };
+        std::vector<int> columns = { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9 };
+
+        GenerateRandomVectors(rows, columns);
+
+        cell::Cell tempCell;
+        for (int i = 0; i < rows.size(); ++i)
         {
-            attackCell.SetCol(lastCell.GetColumn() + 1);
+            tempCell.SetRow(rows[i]);
+            tempCell.SetCol(columns[i]);
+
+            std::pair<std::set<cell::Cell>::iterator, bool> insertPair;
+            insertPair = attackedCells.insert(tempCell);
+
+            if(insertPair.second)
+            {
+                break;
+            }
+            else
+            {
+                continue;
+            }
+        }
+        attackCell = tempCell;
+    }
+}
+
+/**
+*  \brief Select a proximity cell.
+*  \param[in] lastAttackedCell Last attacked cell.
+*  \param[in/out] attackCell Cell to be hit.
+*  \param[in/out] attackedCells reference to a set of attacked cell.
+*/
+void SearchProximityCell(const cell::Cell & lastAttackedCell, cell::Cell & attackCell, std::set<cell::Cell> & attackedCells)
+{
+    attackCell.SetCol(lastAttackedCell.GetColumn());
+    attackCell.SetRow(lastAttackedCell.GetRow());
+
+    int initialSize = attackedCells.size();
+
+    if (lastAttackedCell.GetColumn() < helper::NO_OF_COLUMNS - 1)
+    {
+        while ((!attackedCells.insert(attackCell).second) && (attackCell.GetColumn() < helper::NO_OF_COLUMNS - 1))
+        {
+            attackCell.SetCol(attackCell.GetColumn() + 1);
+        }        
+    }
+    else
+    {
+        if (attackCell.GetColumn() > 0)
+        {
+            while ((!attackedCells.insert(attackCell).second) || (attackCell.GetColumn() > 0))
+            {
+                attackCell.SetCol(attackCell.GetColumn() - 1);
+            }
+        }
+    }
+
+    if (initialSize == attackedCells.size()) //no cell was inserted
+    {
+        attackCell.SetCol(lastAttackedCell.GetColumn());
+
+        if (lastAttackedCell.GetRow() < helper::NO_OF_ROWS - 1)
+        {
+            while ((!attackedCells.insert(attackCell).second) && (attackCell.GetRow() < helper::NO_OF_ROWS - 1))
+            {
+                attackCell.SetRow(attackCell.GetRow() + 1);
+            }
         }
         else
         {
-            if (lastCell.GetColumn() > 0)
+            if (attackCell.GetRow() > 0)
             {
-                attackCell.SetCol(lastCell.GetColumn() - 1);
+                while ((!attackedCells.insert(attackCell).second) || (attackCell.GetRow() > 0))
+                {
+                    attackCell.SetRow(attackCell.GetRow() - 1);
+                }
             }
-
-        }
-
-        if (lastCell.GetRow() < helper::NO_OF_ROWS - 1)
-        {
-            attackCell.SetRow(lastCell.GetRow() + 1);
-        }
-        else
-        {
-            if (lastCell.GetRow() > 0)
-            {
-                attackCell.SetRow(lastCell.GetRow() - 2);
-            }
-        }
+        }        
     }
 }
 
@@ -171,7 +274,9 @@ namespace strategy
 {
     ComputerStrategy::ComputerStrategy(hitboard::HitBoard & hitBoard, shipboard::ShipBoard & shipBoard)
         :m_hitBoard(hitBoard),
-        m_shipBoard(shipBoard)
+        m_shipBoard(shipBoard),
+        m_attackedCells(),
+        m_lastAttackedCell()
     {}
 
     ComputerStrategy::~ComputerStrategy()
@@ -185,49 +290,41 @@ namespace strategy
         {
             attackCell.SetCol(0);
             attackCell.SetRow(0);
+
+            m_attackedCells.insert(attackCell);
         }
         else
         {
-            int size = m_attackedCells.size();
-            cell::CellProperties lastCell = m_attackedCells[size - 1];
-            for (auto i : m_shipBoard.GetInitializedBoard())
+            for (auto i : m_hitBoard.GetInitializedBoard())
             {
+                //get the last attacked cell
                 std::vector<cell::CellProperties>::iterator cellIter =
                     std::find_if(
                     i.begin(),
                     i.end(),
                     [&](cell::CellProperties cell)
                 {
-                    return (cell.GetColumn() == lastCell.GetColumn() && cell.GetRow() == lastCell.GetRow());
-
+                    return (cell.GetColumn() == m_lastAttackedCell.GetColumn() && cell.GetRow() == m_lastAttackedCell.GetRow());
                 });
 
                 if (cellIter != i.end())
                 {
+                    //check if is part of a ship
                     if (cellIter->GetShipMembership())
                     {
-                        if (lastCell.GetColumn() < helper::NO_OF_COLUMNS - 1)
-                        { 
-                            attackCell.SetCol(lastCell.GetColumn() + 1);
-                        }
-                        else
-                        {
-                            attackCell.SetCol(lastCell.GetColumn() - 1);
-                            attackCell.SetRow(lastCell.GetRow() + 1);
-                        }
-                        
-                        attackCell.SetRow(lastCell.GetRow());
+                        SearchProximityCell(m_lastAttackedCell, attackCell, m_attackedCells);
                     }
-
                     else
                     {
-                        SearchForShipCell(lastCell, attackCell);
+                        SearchForShipCell(m_attackedCells, attackCell);
                     }
                 }
             }
         }
 
-       return attackCell;
+        m_lastAttackedCell = attackCell;
+
+        return attackCell;
     }
 
     bool ComputerStrategy::GenerateShip()
@@ -242,7 +339,6 @@ namespace strategy
                 return false;
             }
         }
-
         return true;
     }
 }

@@ -1,10 +1,12 @@
 #include "stdafx.h"
 #include "Game.h"
 #include "Player.h"
+#include "Display.h"
 
 namespace game
 {
-    Game::Game()
+    Game::Game():
+        m_display(NULL)
     {
     }
 
@@ -14,13 +16,14 @@ namespace game
 
     void Game::CreateGame()
     {
-
         //create players
         m_computerPlayer.InitBoards();
         m_computerPlayer.SelectStrategy(player::computerStrategy);
 
         m_humanPlayer.InitBoards();
         m_humanPlayer.SelectStrategy(player::humanStrategy);
+
+        m_display = std::make_shared<display::Display>(m_humanPlayer.GetShipBoard(), m_humanPlayer.GetHitBoard());
     }
 
     void Game::ExitGame()
@@ -37,20 +40,12 @@ namespace game
             if (attackedCell == cell::Cell())
             {
                 std::cout << "Invalid attack cell." << std::endl;
-                return false;
+                return true;
             }
 
             m_computerPlayer.Mark(attackedCell, intoShip);
-            m_humanPlayer.FillHitBoard(attackedCell, intoShip);
-
-            if (intoShip)
-            {
-                std::cout << "Success. A ship was hit" << std::endl;
-            }
-            else
-            {
-                std::cout << "Attack failed. No ship was hit" << std::endl;
-            }
+            m_humanPlayer.FillHitBoard(attackedCell, intoShip);         
+            
         }
         else
         {
@@ -66,11 +61,17 @@ namespace game
             if (attackedCell == cell::Cell())
             {
                 std::cout << "Invalid attack cell." << std::endl;
-                return false;
+                return true;
             }
-
+            
             m_humanPlayer.Mark(attackedCell, intoShip);
             m_computerPlayer.FillHitBoard(attackedCell, intoShip);
+
+
+            m_display->Draw();
+
+            char rowChar = static_cast<char>(attackedCell.GetRow() + DEC_TO_ASCII);
+            std::cout << "Computer attacked cell: " << rowChar << attackedCell.GetColumn() << std::endl;
 
             if (intoShip)
             {
@@ -78,7 +79,7 @@ namespace game
             }
             else
             {
-                std::cout << "Attack failed. No ship was hit" << std::endl;
+                std::cout << "Computer attack failed. No ship was hit" << std::endl;
             }
         }
         else

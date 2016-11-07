@@ -69,6 +69,11 @@ namespace cell
     *  \brief Overloading operator==
     */
     bool operator==(const Cell & lhs, const Cell & rhs);
+
+    /**
+    *  \brief Overloading operator<
+    */
+    bool operator<(const Cell & lhs, const Cell & rhs);
 }
 
 #endif //CELL_H

@@ -83,6 +83,7 @@
     <ClInclude Include="Cell.h" />
     <ClInclude Include="CellProperties.h" />
     <ClInclude Include="ComputerStrategy.h" />
+    <ClInclude Include="Display.h" />
     <ClInclude Include="Game.h" />
     <ClInclude Include="Helper.h" />
     <ClInclude Include="HumanStrategy.h" />
@@ -100,6 +101,7 @@
     <ClCompile Include="Cell.cpp" />
     <ClCompile Include="CellProperties.cpp" />
     <ClCompile Include="ComputerStrategy.cpp" />
+    <ClCompile Include="Display.cpp" />
     <ClCompile Include="Game.cpp" />
     <ClCompile Include="Helper.cpp" />
     <ClCompile Include="HumanStrategy.cpp" />

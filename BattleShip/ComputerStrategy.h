@@ -4,6 +4,7 @@
 #include "Strategy.h"
 #include "HitBoard.h"
 #include "ShipBoard.h"
+#include <set>
 
 namespace strategy
 {
@@ -25,7 +26,7 @@ namespace strategy
         *  \brief Attack opponent.
         *  \return Cell to be marked as hit.
         */
-        virtual cell::Cell Fire(); //!!!!!return as reference????
+        virtual cell::Cell Fire();
 
         /**
         *  \brief Generate ship.
@@ -33,12 +34,14 @@ namespace strategy
         */
         virtual bool GenerateShip();
 
+
     private:
 
         hitboard::HitBoard & m_hitBoard;
         shipboard::ShipBoard & m_shipBoard;
 
-        std::vector<cell::CellProperties> m_attackedCells;
+        std::set<cell::Cell> m_attackedCells;
+        cell::Cell m_lastAttackedCell;
     };
 }
 

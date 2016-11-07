@@ -3,6 +3,8 @@
 
 #include "Player.h"
 #include <memory>
+#include "Display.h"
+#include <exception>
 
 namespace game
 {
@@ -55,7 +57,22 @@ namespace game
             return m_computerPlayer;
         }
 
+        /**
+        *  \brief Return the object used to display the boards.
+        *  \return A reference to display object.
+        */
+        std::shared_ptr<display::Display> GetDisplay()
+        {
+            std::exception_ptr p;
+            if (m_display == nullptr)
+                throw std::exception_ptr(p);
+
+            return m_display;
+        }
+
     private:
+
+        std::shared_ptr<display::Display> m_display;
 
         player::Player m_humanPlayer;
         player::Player m_computerPlayer;

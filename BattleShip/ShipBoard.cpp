@@ -95,9 +95,6 @@ namespace shipboard
             int rowNumber = (int)startPosition.GetRow();
             std::vector<cell::CellProperties *> shipCells;
 
-            //int shipNumberOfCells = startPosition.GetColumn() - endPosition.GetColumn();
-            //ShipTypeOccurence(static_cast<ShipType>(shipNumberOfCells));
-
             for (int i = startPosition.GetColumn() ; i < (endPosition.GetColumn()+1); ++i)
             {
                 if (CheckFreeSpaceForShip(rowNumber, i, m_boardCells))
@@ -199,10 +196,9 @@ namespace shipboard
 
                 intoShip = cellIter->GetShipMembership();
                 cellIter->SetHitState(true);
-
                 break;
             }            
-        }        
+        }
 
         return true;
     }

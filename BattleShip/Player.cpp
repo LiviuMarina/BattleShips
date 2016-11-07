@@ -62,5 +62,4 @@ namespace player
     {
         m_hitBoard.Mark(cell, intoShip);
     }
-
 }

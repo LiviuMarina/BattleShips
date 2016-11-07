@@ -16,7 +16,6 @@ namespace board
 
     void Board::InitBoard()
     {
-
         for (auto i = 0; i < m_width; ++i)
         {
             m_boardCells.push_back(std::vector<cell::CellProperties>());

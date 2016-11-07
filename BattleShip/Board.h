@@ -30,7 +30,7 @@ namespace board{
         /**
         *  \brief Get the initialized the board
         */
-        std::vector<std::vector<cell::CellProperties>> & GetInitializedBoard()
+        const std::vector<std::vector<cell::CellProperties>> & GetInitializedBoard()const
         {
             return m_boardCells;
         }
@@ -56,7 +56,7 @@ namespace board{
         void SetHeight(int height)
         {
             m_height = height;
-        }        
+        }  
 
     private:
 

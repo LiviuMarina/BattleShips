@@ -2,6 +2,8 @@
 #define STRATEGY_H
 
 #include "Cell.h"
+#include "ShipBoard.h"
+#include "HitBoard.h"
 
 namespace strategy
 {

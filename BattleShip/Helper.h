@@ -19,10 +19,7 @@ namespace helper
     *  \brief Define Max int.
     */
     const int MAX_INT = 2147483647;
-
-    //typedef std::array<std::array<CellProperties, NO_OF_ROWS>, NO_OF_COLUMNS> CellPropertiesArray;
-
-
+    
     enum ShipType{
         submarine = 1,
         destroyer,

@@ -6,6 +6,7 @@
 #include <ostream>
 #include "Game.h"
 #include <string>
+#include <exception>
 
 int _tmain(int argc, _TCHAR* argv[])
 { 
@@ -59,9 +60,30 @@ int _tmain(int argc, _TCHAR* argv[])
     }
        
     std::cout << "Random ships were added." << std::endl;
+    
+    try
+    {
+        game.GetDisplay()->Draw();
+    }
 
+    catch (std::exception_ptr& p)
+    {
+        std::cout << "Boards can't be displayed" << std::endl;
+        std::cout << "Null pointer exception" << std::endl;
+
+        return 0;
+    }
+
+    catch (std::exception& e)
+    {
+        std::cout << e.what() << std::endl;
+        std::cout << "Boards can't be displayed" << std::endl;
+
+        return 0;
+    }
+    
+    
     bool notDefeatead = true;
-
     while (notDefeatead)
     {
         if (!game.Play(notDefeatead))
